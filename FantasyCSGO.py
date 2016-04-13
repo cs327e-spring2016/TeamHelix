@@ -13,5 +13,6 @@ def main():
     if 'playerid' in obtained:
       playerlinks.append(obtained)
       print(obtained)
-  print(len(playerlinks))
+
+  print('total players retrieved:', len(playerlinks))
 main()
