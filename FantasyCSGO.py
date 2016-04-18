@@ -11,8 +11,17 @@ def main():
   for link in soup.find_all('a'):
     obtained = str(link.get('href'))
     if 'playerid' in obtained:
-      playerlinks.append(obtained)
-      print(obtained)
+      #making obtained href an actual link
+      playerlinks.append("http://www.hltv.org" + obtained)
+      #print(obtained)
 
   print('total players retrieved:', len(playerlinks))
+
+  currentplayer = 0
+  while currentplayer < 50:
+    tempPlayer = playerlinks.pop(0)
+    playerPage = requests.get(tempPlayer)
+    playerSoup = BeautifulSoup(playerPage.text, "lxml")
+    currentplayer += 1
+
 main()
