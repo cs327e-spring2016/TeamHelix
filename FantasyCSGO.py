@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def main():
+  headers = {"User-Agent": "Mozilla/5.0 (Android 4.0.3)"}
   startUrl = "http://www.hltv.org/?pageid=181"
   page = requests.get(startUrl)
   soup = BeautifulSoup(page.text, 'lxml')
@@ -20,8 +21,11 @@ def main():
   currentplayer = 0
   while currentplayer < 50:
     tempPlayer = playerlinks.pop(0)
-    playerPage = requests.get(tempPlayer)
-    playerSoup = BeautifulSoup(playerPage.text, "lxml")
+    playerPage = requests.get(tempPlayer, headers=headers)
     currentplayer += 1
+
+  playerSoup = BeautifulSoup(playerPage.text, "lxml")
+  playerSoup = playerSoup.prettify()
+  print(playerSoup.encode("utf-8"))
 
 main()
