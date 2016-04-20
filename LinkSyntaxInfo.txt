@@ -18,5 +18,5 @@ pageid=173 is the player statistics page
 <option value="32">de_mirage</option>
 <option value="33">de_inferno</option>
 <option value="35">de_train</option>
-<option value="40">de_overpass</option>
 <option value="39">de_cobblestone</option>
+<option value="40">de_overpass</option>

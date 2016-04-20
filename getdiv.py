@@ -1,8 +1,8 @@
-from bs4 import BeautifulSoup
+Q from bs4 import BeautifulSoup
 import requests
 
 def main():
-  link = "http://www.hltv.org/?pageid=173&playerid=7938&mapid=32&m=yes"
+  link = playerlink
   reqdLink = requests.get(link)
   playSoup = BeautifulSoup(reqdLink.text, "lxml")
   allDiv = playSoup.findAll("div", attrs={ "class" : "covSmallHeadline"})
