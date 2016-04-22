@@ -34,6 +34,7 @@ def retrievePlayerData(playerlink):
   print("Processed", keyStats[0])
   return totalPlayerStats
 
+
 def main():
   #identify as mobile
   headers = {"User-Agent": "Mozilla/5.0 (Android 4.0.3)"}
@@ -65,4 +66,46 @@ def main():
 
   print(allStats)
 
+  insertPlayers(allStats)
+
+
+
+#adds players to the players table
+def insertPlayers(playersList):
+
+  
+  conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock',
+                         user = 'root', passwd='1234', db='mysql', charset='utf8')
+
+  cur = conn.cursor()
+  cur.execute("USE scraping")
+
+  insertplayer = "INSERT INTO players(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+  for i in range(len(playersList)):
+
+    #gets individual stats into correct data type
+    name = str(playersList[i][0][0])
+    TK = int(playersList[i][0][2])
+    HS = float(playersList[i][0][3])
+    TD = int(playersList[i][0][4])
+    KD = float(playersList[i][0][5])
+    matches = int(playersList[i][0][6])
+    rounds = int(playersList[i][0][7])
+    AKR = float(playersList[i][0][8])
+    AAR = float(playersList[i][0][9])
+    ADR = float(playersList[i][0][10])
+
+    #adds data to table
+    cur.execute(insertplayer, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
+    conn.commit()
+    
+    #print(playersList[i][0])
+    
+  cur.close()
+  conn.close()
+  print("added to players table")
+
+
+  
 main()
