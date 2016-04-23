@@ -68,6 +68,7 @@ def main():
     allStats.append(retrievePlayerData(player))
 
   print(allStats)
+  
   insertPlayers(allStats)
   
 
@@ -85,6 +86,7 @@ def insertPlayers(playersList):
 
   insertplayer = "INSERT INTO players(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
+  #data for overall stats
   for i in range(len(playersList)):
 
     #gets individual stats into correct data type
@@ -102,13 +104,80 @@ def insertPlayers(playersList):
     #adds data to table
     cur.execute(insertplayer, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
     conn.commit()
+
+  print("Successfully added players to players table")
+
+
+  cachePlayer = "INSERT INTO de_cache(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+ 
+  #data for de_cache table
+  for i in range(len(playersList)):
     
-    #print(playersList[i][0])
+    name = str(playersList[i][1][0])
+    TK = int(playersList[i][1][2])
+    HS = float(playersList[i][1][3])
+    TD = int(playersList[i][1][4])
+    KD = float(playersList[i][1][5])
+    matches = int(playersList[i][1][6])
+    rounds = int(playersList[i][1][7])
+    AKR = float(playersList[i][1][8])
+    AAR = float(playersList[i][1][9])
+    ADR = float(playersList[i][1][10])
+
+    cur.execute(cachePlayer, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
+    conn.commit()
+
+  print("Successfully added players to de_cache table")
+
+
+  dust2Player = "INSERT INTO de_dust2(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+  
+  #data for de_dust2 table
+  for i in range(len(playersList)):
     
+    name = str(playersList[i][2][0])
+    TK = int(playersList[i][2][2])
+    HS = float(playersList[i][2][3])
+    TD = int(playersList[i][2][4])
+    KD = float(playersList[i][2][5])
+    matches = int(playersList[i][2][6])
+    rounds = int(playersList[i][2][7])
+    AKR = float(playersList[i][2][8])
+    AAR = float(playersList[i][2][9])
+    ADR = float(playersList[i][2][10])
+
+    cur.execute(dust2Player, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
+    conn.commit()
+
+  print("Successfully added players to de_dust2 table")
+
+  
+  miragePlayer = "INSERT INTO de_mirage(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+  
+  #data for de_mirage table
+  for i in range(len(playersList)):
+    
+    name = str(playersList[i][3][0])
+    TK = int(playersList[i][3][2])
+    HS = float(playersList[i][3][3])
+    TD = int(playersList[i][3][4])
+    KD = float(playersList[i][3][5])
+    matches = int(playersList[i][3][6])
+    rounds = int(playersList[i][3][7])
+    AKR = float(playersList[i][3][8])
+    AAR = float(playersList[i][3][9])
+    ADR = float(playersList[i][3][10])
+
+    cur.execute(miragePlayer, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
+    conn.commit()
+
+    
+  print("Successfully added players to de_mirage table")
+  
+
+  
   cur.close()
   conn.close()
-  print("added to players table")
-
 
   
 main()
