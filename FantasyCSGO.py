@@ -34,7 +34,7 @@ def retrievePlayerData(playerlink):
 
     totalPlayerStats.append(keyStats)
   print("Processed", keyStats[0])
-  
+
   return totalPlayerStats
 
 
@@ -67,17 +67,36 @@ def main():
   for player in top50:
     allStats.append(retrievePlayerData(player))
 
-  print(allStats)
-  
+  #took away the all print, prints confirmation instead
+  #print(allStats)
+  print("")
+  print("Scraping completed.")
+
   insertPlayers(allStats)
-  
+
+  print("")
+  #this is the most basic edition of the query interface
+  #our sql queries will be stored below
+  queries = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,]
+  print("Queries:")
+  for unit in queries:
+    print(str(queries.index(unit)+ 1) + "." , unit)
+  uString = ""
+  print("Enter exit to quit")
+  #until the user types exit, allow them to execute queries
+  while uString != "exit":
+    uString = ""
+    if type(uString) != int:
+      uString = int(input("Enter number of query: "))
+      print(queries[uString - 1])
+
 
 
 
 #adds players to the players table
 def insertPlayers(playersList):
 
-  
+
   conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock',
                          user = 'root', passwd='1234', db='mysql', charset='utf8')
 
@@ -109,10 +128,10 @@ def insertPlayers(playersList):
 
 
   cachePlayer = "INSERT INTO de_cache(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
- 
+
   #data for de_cache table
   for i in range(len(playersList)):
-    
+
     name = str(playersList[i][1][0])
     TK = int(playersList[i][1][2])
     HS = float(playersList[i][1][3])
@@ -131,10 +150,10 @@ def insertPlayers(playersList):
 
 
   dust2Player = "INSERT INTO de_dust2(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-  
+
   #data for de_dust2 table
   for i in range(len(playersList)):
-    
+
     name = str(playersList[i][2][0])
     TK = int(playersList[i][2][2])
     HS = float(playersList[i][2][3])
@@ -151,12 +170,12 @@ def insertPlayers(playersList):
 
   print("Successfully added players to de_dust2 table")
 
-  
+
   miragePlayer = "INSERT INTO de_mirage(player_name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-  
+
   #data for de_mirage table
   for i in range(len(playersList)):
-    
+
     name = str(playersList[i][3][0])
     TK = int(playersList[i][3][2])
     HS = float(playersList[i][3][3])
@@ -171,13 +190,13 @@ def insertPlayers(playersList):
     cur.execute(miragePlayer, (name, TK, HS, TD, KD, matches, rounds, AKR, AAR, ADR))
     conn.commit()
 
-    
-  print("Successfully added players to de_mirage table")
-  
 
-  
+  print("Successfully added players to de_mirage table")
+
+
+
   cur.close()
   conn.close()
 
-  
+
 main()
