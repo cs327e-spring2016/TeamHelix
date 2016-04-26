@@ -1,7 +1,47 @@
 
+import sys
 import pymysql
 import requests
 from bs4 import BeautifulSoup
+
+def webScrape():
+    #identify as mobile
+    headers = {"User-Agent": "Mozilla/5.0 (Android 4.0.3)"}
+    #start on largest page
+    startUrl = "http://www.hltv.org/?pageid=181"
+    page = requests.get(startUrl)
+    soup = BeautifulSoup(page.text, 'lxml')
+    playerlinks = []
+    for link in soup.find_all('a'):
+      obtained = str(link.get('href'))
+      if 'playerid' in obtained:
+        #making obtained href an actual link
+        playerlinks.append("http://www.hltv.org" + obtained)
+        #print(obtained)
+
+    print('total players retrieved:', len(playerlinks))
+
+    #intializing list to store top 50 players
+    top50 = []
+    while len(top50) < 50:
+      tempPlayer = playerlinks.pop(0)
+      top50.append(tempPlayer)
+    print("Playerset trimmed to top 50")
+
+    allStats = []
+    #forming list of stat lists
+    for player in top50:
+      allStats.append(retrievePlayerData(player))
+
+    #took away the all print, prints confirmation instead
+    #print(allStats)
+    print("")
+    print("Scraping completed.")
+
+    #insertPlayers(allStats)
+
+    print("")
+
 
 def retrievePlayerData(playerlink):
   headers = {"User-Agent": "Mozilla/5.0 (Android 4.0.3)"}
@@ -39,42 +79,16 @@ def retrievePlayerData(playerlink):
 
 
 def main():
-  #identify as mobile
-  headers = {"User-Agent": "Mozilla/5.0 (Android 4.0.3)"}
-  #start on largest page
-  startUrl = "http://www.hltv.org/?pageid=181"
-  page = requests.get(startUrl)
-  soup = BeautifulSoup(page.text, 'lxml')
-  playerlinks = []
-  for link in soup.find_all('a'):
-    obtained = str(link.get('href'))
-    if 'playerid' in obtained:
-      #making obtained href an actual link
-      playerlinks.append("http://www.hltv.org" + obtained)
-      #print(obtained)
 
-  print('total players retrieved:', len(playerlinks))
+  firstChoice = ""
 
-  #intializing list to store top 50 players
-  top50 = []
-  while len(top50) < 50:
-    tempPlayer = playerlinks.pop(0)
-    top50.append(tempPlayer)
-  print("Playerset trimmed to top 50")
+  while firstChoice not in ["Y", "N"]:
+    firstChoice = str(input("Do you want to scrape data this session? Y/N: " ))
+    firstChoice = firstChoice.upper()
 
-  allStats = []
-  #forming list of stat lists
-  for player in top50:
-    allStats.append(retrievePlayerData(player))
+  if firstChoice == "Y":
+    allStats = webScrape()
 
-  #took away the all print, prints confirmation instead
-  #print(allStats)
-  print("")
-  print("Scraping completed.")
-
-  insertPlayers(allStats)
-
-  print("")
   #this is the most basic edition of the query interface
   #our sql queries will be stored below
   queries = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,]
@@ -87,7 +101,11 @@ def main():
   while uString != "exit":
     uString = ""
     if type(uString) != int:
-      uString = int(input("Enter number of query: "))
+      if uString == "exit":
+        sys.exit("CYA")
+      uString = input("Enter number of query: ")
+      if uString == "exit":
+        sys.exit("CYA")
       print(queries[uString - 1])
 
 

@@ -16,6 +16,8 @@ pageid=173 is the player statistics page
 <option value="29">de_cache</option>
 <option value="31">de_dust2</option>
 <option value="32">de_mirage</option>
+
+The following are not used in our demo version, it takes too long to scrape
 <option value="33">de_inferno</option>
 <option value="35">de_train</option>
 <option value="39">de_cobblestone</option>
