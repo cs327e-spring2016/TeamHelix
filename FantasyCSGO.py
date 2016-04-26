@@ -129,6 +129,7 @@ def insertPlayers(playersList):
 
     #gets individual stats into correct data type
     name = str(playersList[i][0][0])
+    name = name.lower()
     TK = int(playersList[i][0][2])
     HS = float(playersList[i][0][3])
     TD = int(playersList[i][0][4])
@@ -152,6 +153,7 @@ def insertPlayers(playersList):
   for i in range(len(playersList)):
 
     name = str(playersList[i][1][0])
+    name = name.lower()
     TK = int(playersList[i][1][2])
     HS = float(playersList[i][1][3])
     TD = int(playersList[i][1][4])
@@ -174,6 +176,7 @@ def insertPlayers(playersList):
   for i in range(len(playersList)):
 
     name = str(playersList[i][2][0])
+    name = name.lower()
     TK = int(playersList[i][2][2])
     HS = float(playersList[i][2][3])
     TD = int(playersList[i][2][4])
@@ -196,6 +199,7 @@ def insertPlayers(playersList):
   for i in range(len(playersList)):
 
     name = str(playersList[i][3][0])
+    name = name.lower()
     TK = int(playersList[i][3][2])
     HS = float(playersList[i][3][3])
     TD = int(playersList[i][3][4])
@@ -217,5 +221,28 @@ def insertPlayers(playersList):
   cur.close()
   conn.close()
 
+
+
+def query():
+
+  conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock',
+                         user = 'root', passwd='1234', db='mysql', charset='utf8')
+
+  cur = conn.cursor()
+  cur.execute("USE scraping")
+  player1 = "xantares"
+  player2 = "shroud"
+
+  cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s)", (player1, player2))
+  rows = cur.fetchall()
+  for row in rows:
+    for col in row:
+      print("%s" % col, end= " ")
+    print()
+
+
+  cur.close()
+  conn.close()
+  
 
 main()
