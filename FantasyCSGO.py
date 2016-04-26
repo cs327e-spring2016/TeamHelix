@@ -3,6 +3,7 @@ import sys
 import pymysql
 import requests
 from bs4 import BeautifulSoup
+import string
 
 def webScrape():
     #identify as mobile
