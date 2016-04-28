@@ -237,10 +237,18 @@ def query():
   player3 = str(input("Enter player 3: "))
   player4 = str(input("Enter player 4: "))
   player5 = str(input("Enter player 5: "))
+  selectmap = str(input("Choose map from (de_cache, de_dust2, de_mirage) or leave blank for overall data: "))
 
 
   #have to add %s to statement for more players
-  cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  if (selectmap == 'de_mirage'):
+    cur.execute("SELECT * FROM de_mirage WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  elif(selectmap == 'de_cache'):
+    cur.execute("SELECT * FROM de_cache WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  elif(selectmap == 'de_dust2'):
+    cur.execute("SELECT * FROM de_dust2 WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  else:
+    cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
   rows = cur.fetchall()
   for row in rows:
     for col in row:
@@ -253,4 +261,5 @@ def query():
   conn.close()
   
 
-main()
+#main()
+query()
