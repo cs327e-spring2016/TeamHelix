@@ -4,6 +4,7 @@ import pymysql
 import requests
 from bs4 import BeautifulSoup
 import string
+import random
 
 def webScrape():
     #identify as mobile
