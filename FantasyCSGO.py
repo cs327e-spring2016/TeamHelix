@@ -231,15 +231,22 @@ def query():
 
   cur = conn.cursor()
   cur.execute("USE scraping")
-  player1 = "xantares"
-  player2 = "shroud"
+  #these variables can be inputs from users and returns results
+  player1 = str(input("Enter player 1: "))
+  player2 = str(input("Enter player 2: "))
+  player3 = str(input("Enter player 3: "))
+  player4 = str(input("Enter player 4: "))
+  player5 = str(input("Enter player 5: "))
 
-  cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s)", (player1, player2))
+
+  #have to add %s to statement for more players
+  cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
   rows = cur.fetchall()
   for row in rows:
     for col in row:
       print("%s" % col, end= " ")
     print()
+
 
 
   cur.close()
