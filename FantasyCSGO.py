@@ -40,7 +40,7 @@ def webScrape():
     print("")
     print("Scraping completed.")
 
-    #insertPlayers(allStats)
+    insertPlayers(allStats)
 
     print("")
 
@@ -91,6 +91,9 @@ def main():
   if firstChoice == "Y":
     allStats = webScrape()
 
+  teamquery()
+
+'''  
   #this is the most basic edition of the query interface
   #our sql queries will be stored below
   queries = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,]
@@ -109,7 +112,8 @@ def main():
       if uString == "exit":
         sys.exit("CYA")
       print(queries[uString - 1])
-
+'''
+  
 
 
 
@@ -224,7 +228,18 @@ def insertPlayers(playersList):
 
 
 
-def query():
+def teamquery():
+
+  firstChoice = ""
+
+  while firstChoice not in ["Y", "N"]:
+    firstChoice = str(input("Do you want to query teams? Y/N: " ))
+    firstChoice = firstChoice.upper()
+
+  if firstChoice == "N":
+      singleplayer()
+      return
+    
 
   conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock',
                          user = 'root', passwd='1234', db='mysql', charset='utf8')
@@ -232,6 +247,7 @@ def query():
   cur = conn.cursor()
   cur.execute("USE scraping")
   #these variables can be inputs from users and returns results
+  print("Please insert the players for the first team")
   player1 = str(input("Enter player 1: "))
   player2 = str(input("Enter player 2: "))
   player3 = str(input("Enter player 3: "))
@@ -239,8 +255,15 @@ def query():
   player5 = str(input("Enter player 5: "))
   selectmap = str(input("Choose map from (de_cache, de_dust2, de_mirage) or leave blank for overall data: "))
 
+  print("team created")
+
+  insertteam = "INSERT INTO team(player1, player2, player3, player4, player5) VALUES (%s, %s, %s, %s, %s)"
+  cur.execute(insertteam, (player1, player2, player3, player4, player5))
+  conn.commit()
+
 
   #have to add %s to statement for more players
+  print("plyr_id/name, TK, HS%, TD, K/D, Matches, Rounds, AKR, AAR, ADR")
   if (selectmap == 'de_mirage'):
     cur.execute("SELECT * FROM de_mirage WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
   elif(selectmap == 'de_cache'):
@@ -255,11 +278,91 @@ def query():
       print("%s" % col, end= " ")
     print()
 
+  #for the second team
+  print()
+  print("Please insert the players for the second team")
+  player1 = str(input("Enter player 1: "))
+  player2 = str(input("Enter player 2: "))
+  player3 = str(input("Enter player 3: "))
+  player4 = str(input("Enter player 4: "))
+  player5 = str(input("Enter player 5: "))
+  selectmap = str(input("Choose map from (de_cache, de_dust2, de_mirage) or leave blank for overall data: "))
 
+  print()
+  print("team created")
+
+  insertteam = "INSERT INTO team(player1, player2, player3, player4, player5) VALUES (%s, %s, %s, %s, %s)"
+  cur.execute(insertteam, (player1, player2, player3, player4, player5))
+  conn.commit()
+
+
+  #have to add %s to statement for more players
+  print("plyr_id/name, TK, HS%, TD, K/D, Matches, Rounds, AKR, AAR, ADR")
+  if (selectmap == 'de_mirage'):
+    cur.execute("SELECT * FROM de_mirage WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  elif(selectmap == 'de_cache'):
+    cur.execute("SELECT * FROM de_cache WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  elif(selectmap == 'de_dust2'):
+    cur.execute("SELECT * FROM de_dust2 WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  else:
+    cur.execute("SELECT * FROM players WHERE player_name IN (%s, %s, %s, %s, %s)", (player1, player2, player3, player4, player5))
+  rows = cur.fetchall()
+  for row in rows:
+    for col in row:
+      print("%s" % col, end= " ")
+    print()
+
+  
+
+  cur.close()
+  conn.close()
+  singleplayer()
+
+
+#only search 1 player
+def singleplayer():
+
+  firstChoice = ""
+
+  while firstChoice not in ["Y", "N"]:
+    firstChoice = str(input("Do you want to search for an individual player? Y/N: " ))
+    firstChoice = firstChoice.upper()
+
+  if firstChoice == "N":
+    return
+    
+  conn = pymysql.connect(host='127.0.0.1', unix_socket='/tmp/mysql.sock',
+                         user = 'root', passwd='1234', db='mysql', charset='utf8')
+
+
+  cur = conn.cursor()
+  cur.execute("USE scraping")
+  #these variables can be inputs from users and returns results
+  print("Please insert the player name")
+  player1 = str(input("Enter the player's name: "))
+  selectmap = str(input("Choose map from (de_cache, de_dust2, de_mirage) or leave blank for overall data: "))
+
+
+  #prints stats for one player
+  print("name, TK, HS%, TD, K/D, Matches, Rounds, AKR, AAR, ADR")
+  if (selectmap == 'de_mirage'):
+    cur.execute("SELECT * FROM de_mirage WHERE player_name = (%s)", (player1))
+  elif(selectmap == 'de_cache'):
+    cur.execute("SELECT * FROM de_cache WHERE player_name = (%s)", (player1))
+  elif(selectmap == 'de_dust2'):
+    cur.execute("SELECT * FROM de_dust2 WHERE player_name = (%s)", (player1))
+  else:
+    cur.execute("SELECT * FROM players WHERE player_name = (%s)", (player1))
+  rows = cur.fetchall()
+  for row in rows:
+    for col in row:
+      print("%s" % col, end= "  ")
+    print()
+
+  singleplayer()
 
   cur.close()
   conn.close()
   
 
-#main()
-query()
+main()
